@@ -7,6 +7,7 @@ function App() {
   const url = 'https://swapi.dev/api/planets';
   const [planets, setPlanets] = useState([]);
   const [selectedPlanets, setSelectPlanets] = useState([]);
+  const [searchPlanets, setSearchPlanets] = useState('');
 
   useEffect(() => {
     fetch(url)
@@ -21,19 +22,39 @@ function App() {
       });
   }, []);
 
+  const handleChange = ({ target }) => {
+    // console.log(target.value);
+    const { value } = target;
+    setSearchPlanets(value);
+  };
+
   useEffect(() => {
-    const filteredPlanets = planets.filter((planet) => planet.name);
+    const filteredPlanets = planets.filter((planet) => planet.name
+      .includes(searchPlanets));
     setSelectPlanets(filteredPlanets);
     // console.log(filteredPlanets);
-  }, [planets]);
+  }, [planets, searchPlanets]);
 
   const contexValue = {
     planets,
     selectedPlanets,
+    searchPlanets,
   };
 
   return (
     <SearchPlanetsContext.Provider value={ contexValue }>
+      <div>
+        <h1>Projeto Star Wars</h1>
+        <input
+          placeholder="Filtrar por nome"
+          type="text"
+          id="searchPlanets"
+          name="searchPlanets"
+          value={ searchPlanets }
+          data-testid="name-filter"
+          onChange={ handleChange }
+        />
+      </div>
       <Table />
     </SearchPlanetsContext.Provider>
   );
