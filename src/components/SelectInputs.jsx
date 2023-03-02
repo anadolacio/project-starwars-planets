@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import SearchPlanetsContext from '../context/SearchPlanetsContext';
 
 function SelectInputs() {
-  const { funcFilter } = useContext(SearchPlanetsContext);
+  const { filterConditions } = useContext(SearchPlanetsContext);
   const [conditions, setConditions] = useState({
     unit: 0,
     column: 'population',
@@ -58,8 +58,11 @@ function SelectInputs() {
       <button
         data-testid="button-filter"
         onClick={ () => {
-          funcFilter('completFilter', conditions);
+          filterConditions(conditions);
           setFilterColumns([...filterColumns, conditions.column]);
+          setConditions({ ...conditions,
+            column: saveColumns.filter((element) => !conditions.column
+              .includes(element))[0] });
         } }
         type="button"
       >

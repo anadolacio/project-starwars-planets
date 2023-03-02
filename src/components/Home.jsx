@@ -13,10 +13,10 @@ export default function Home() {
         <input
           placeholder="Filtrar por nome"
           type="text"
-          id="searchPlanets"
-          name="searchPlanets"
+          id="name-filter"
+          name="name-filter"
           data-testid="name-filter"
-          onChange={ ({ target: { value } }) => funcFilter('inputText', value) }
+          onChange={ (e) => funcFilter(e) }
         />
       </div>
       <SelectInputs />

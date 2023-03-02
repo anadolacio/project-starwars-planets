@@ -27,35 +27,33 @@ function MyProvider({ children }) {
     init();
   }, []);
 
-  const filterConditions = (filter, value) => {
-    const { operation, unit, column } = value;
+  const filterConditions = ({ operation, unit, column }) => {
+    const filter = selectedPlanets;
     if (operation === 'maior que') {
-      return filter
+      const filtro = filter
         .filter((planet) => parseInt(planet[column], 10) > parseInt(unit, 10));
-    }
-    if (operation === 'menor que') {
-      return filter
+      setSelectedPlanets(filtro);
+    } else if (operation === 'menor que') {
+      const filtro = filter
         .filter((planet) => parseInt(planet[column], 10) < parseInt(unit, 10));
-    } return filter
-      .filter((planet) => parseInt(planet[column], 10) === parseInt(unit, 10));
-  };
-
-  const funcFilter = (type, value) => {
-    let filtro = planets;
-    if (type === 'inputText') {
-      filtro = filtro.filter((elemento) => elemento.name.toLowerCase()
-        .includes(value.toLowerCase()));
+      setSelectedPlanets(filtro);
+    } else {
+      const filtro = filter
+        .filter((planet) => parseInt(planet[column], 10) === parseInt(unit, 10));
       setSelectedPlanets(filtro);
     }
-    if (type === 'completFilter') {
-      filtro = selectedPlanets;
-      setSelectedPlanets(filterConditions(filtro, value));
-    }
+  };
+
+  const funcFilter = ({ target: { value } }) => {
+    let filtro = planets;
+    filtro = filtro.filter((elemento) => elemento.name.toLowerCase()
+      .includes(value.toLowerCase()));
+    setSelectedPlanets(filtro);
   };
 
   return (
     <SearchPlanetsContext.Provider
-      value={ { funcFilter, selectedPlanets } }
+      value={ { funcFilter, selectedPlanets, filterConditions } }
     >
       { children }
     </SearchPlanetsContext.Provider>
