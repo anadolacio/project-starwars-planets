@@ -1,9 +1,24 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
+import userEvent from '@testing-library/user-event';
 
-test('I am your test', () => {
+test('All tests', async () => {
   render(<App />);
-  const linkElement = screen.getByText(/Hello, App!/i);
-  expect(linkElement).toBeInTheDocument();
+  await waitFor(() => expect(screen.getByTestId('name-filter')))
+  expect(screen.getByText(/coluna/i))
+  expect(screen.getByTestId("column-filter"))
+  userEvent.selectOptions(screen.getByTestId("column-filter"), 'diameter')
+  expect(screen.getByTestId('comparison-filter'))
+  userEvent.click(screen.getByTestId('comparison-filter'))
+  userEvent.selectOptions(screen.getByTestId('comparison-filter'), 'maior que')
+  userEvent.click(screen.getByTestId('button-filter'))
+  userEvent.click(screen.getByTestId('comparison-filter'))
+  userEvent.selectOptions(screen.getByTestId('comparison-filter'), 'menor que')
+  userEvent.click(screen.getByTestId('button-filter'))
+  userEvent.click(screen.getByTestId('comparison-filter'))
+  userEvent.selectOptions(screen.getByTestId('comparison-filter'), 'igual a')
+  userEvent.click(screen.getByTestId('button-filter'))
+  userEvent.click(screen.getByTestId('button-remove-filters'))
+  expect(screen.getByTestId('button-remove-filters'))
 });

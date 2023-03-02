@@ -68,9 +68,29 @@ function SelectInputs() {
       >
         Filtrar
       </button>
+
+      <button
+        data-testid="button-remove-filters"
+        type="button"
+        onClick={ () => {
+          setFilterColumns([]);
+          setConditions({
+            unit: 0,
+            column: 'population',
+            operation: 'maior que',
+          });
+        } }
+      >
+        Remover todas filtragens
+      </button>
+
       {
         filterColumns.map((filter) => (
-          <button type="button" key={ filter }>
+          <button
+            data-testid="filter"
+            type="button"
+            key={ filter }
+          >
             {filter}
           </button>
         ))
