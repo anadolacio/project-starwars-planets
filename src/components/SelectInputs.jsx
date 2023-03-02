@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import SearchPlanetsContext from '../context/SearchPlanetsContext';
 
 function SelectInputs() {
-  const { filterConditions } = useContext(SearchPlanetsContext);
+  const { funcFilter } = useContext(SearchPlanetsContext);
   const [conditions, setConditions] = useState({
-    number: '0',
+    unit: 0,
     column: 'population',
     operation: 'maior que',
   });
@@ -45,20 +45,20 @@ function SelectInputs() {
 
       <input
         placeholder="Digite um número"
-        type="text"
+        type="number"
         id="number"
-        name={ conditions.number }
-        value={ conditions.number }
+        // name={ conditions.number }
+        value={ conditions.unit }
         data-testid="value-filter"
         onChange={ ({ target: { value } }) => {
-          setConditions({ ...conditions, number: value });
+          setConditions({ ...conditions, unit: value });
         } }
       />
 
       <button
         data-testid="button-filter"
         onClick={ () => {
-          filterConditions(conditions);
+          funcFilter('completFilter', conditions);
           setFilterColumns([...filterColumns, conditions.column]);
         } }
         type="button"

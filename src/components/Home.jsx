@@ -16,7 +16,7 @@ export default function Home() {
           id="searchPlanets"
           name="searchPlanets"
           data-testid="name-filter"
-          onChange={ funcFilter }
+          onChange={ ({ target: { value } }) => funcFilter('inputText', value) }
         />
       </div>
       <SelectInputs />

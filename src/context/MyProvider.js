@@ -7,7 +7,7 @@ function MyProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [selectedPlanets, setSelectedPlanets] = useState([]);
 
-  useEffect(() => {
+  const fetchAPI = () => {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -18,44 +18,45 @@ function MyProvider({ children }) {
         setPlanets(planetsSearched);
         setSelectedPlanets(planetsSearched);
       });
+  };
+
+  useEffect(() => {
+    function init() {
+      fetchAPI();
+    }
+    init();
   }, []);
 
-  const funcFilter = ({ target: { value } }) => {
-    const filteredPlanets = planets.filter((planet) => planet.name
-      .includes(value));
-    setSelectedPlanets([...filteredPlanets]);
-  };
-
-  const filterConditions = ({ number, column, operation }) => {
+  const filterConditions = (filter, value) => {
+    const { operation, unit, column } = value;
     if (operation === 'maior que') {
-      const filter = selectedPlanets
-        .filter((planet) => Number(planet[column]) > Number(number));
-      //   console.log(filter);
-      setSelectedPlanets([...filter]);
+      return filter
+        .filter((planet) => parseInt(planet[column], 10) > parseInt(unit, 10));
     }
     if (operation === 'menor que') {
-      const filter = selectedPlanets
-        .filter((planet) => Number(planet[column]) < Number(number));
-      setSelectedPlanets([...filter]);
-    } else {
-      const filter = selectedPlanets
-        .filter((planet) => Number(planet[column]) === Number(number));
-      //   console.log(filter);
-      setSelectedPlanets([...filter]);
-    }
+      return filter
+        .filter((planet) => parseInt(planet[column], 10) < parseInt(unit, 10));
+    } return filter
+      .filter((planet) => parseInt(planet[column], 10) === parseInt(unit, 10));
   };
 
-  const contexValue = {
-    planets,
-    setPlanets,
-    selectedPlanets,
-    setSelectedPlanets,
-    funcFilter,
-    filterConditions,
+  const funcFilter = (type, value) => {
+    let filtro = planets;
+    if (type === 'inputText') {
+      filtro = filtro.filter((elemento) => elemento.name.toLowerCase()
+        .includes(value.toLowerCase()));
+      setSelectedPlanets(filtro);
+    }
+    if (type === 'completFilter') {
+      filtro = selectedPlanets;
+      setSelectedPlanets(filterConditions(filtro, value));
+    }
   };
 
   return (
-    <SearchPlanetsContext.Provider value={ contexValue }>
+    <SearchPlanetsContext.Provider
+      value={ { funcFilter, selectedPlanets } }
+    >
       { children }
     </SearchPlanetsContext.Provider>
   );
