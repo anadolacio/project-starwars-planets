@@ -2,13 +2,14 @@ import React, { useContext, useState } from 'react';
 import SearchPlanetsContext from '../context/SearchPlanetsContext';
 
 function SelectInputs() {
-  const { filterConditions } = useContext(SearchPlanetsContext);
+  const { filterConditions, filterColumns,
+    setFilterColumns, conditionArray,
+    setConditionArray } = useContext(SearchPlanetsContext);
   const [conditions, setConditions] = useState({
     unit: 0,
     column: 'population',
     operation: 'maior que',
   });
-  const [filterColumns, setFilterColumns] = useState([]);
   const saveColumns = ['population',
     'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
 
@@ -59,6 +60,7 @@ function SelectInputs() {
         data-testid="button-filter"
         onClick={ () => {
           filterConditions(conditions);
+          setConditionArray([...conditionArray, conditions]);
           setFilterColumns([...filterColumns, conditions.column]);
           setConditions({ ...conditions,
             column: saveColumns.filter((element) => !conditions.column
@@ -73,6 +75,7 @@ function SelectInputs() {
         data-testid="button-remove-filters"
         type="button"
         onClick={ () => {
+          setConditionArray([]);
           setFilterColumns([]);
           setConditions({
             unit: 0,
@@ -90,6 +93,10 @@ function SelectInputs() {
             data-testid="filter"
             type="button"
             key={ filter }
+            onClick={ () => {
+              setFilterColumns(filterColumns.filter((e) => e !== filter));
+              setConditionArray(conditionArray.filter((e) => e.column !== filter));
+            } }
           >
             {filter}
           </button>

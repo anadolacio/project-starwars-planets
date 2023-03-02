@@ -6,6 +6,8 @@ function MyProvider({ children }) {
   const url = 'https://swapi.dev/api/planets';
   const [planets, setPlanets] = useState([]);
   const [selectedPlanets, setSelectedPlanets] = useState([]);
+  const [filterColumns, setFilterColumns] = useState([]);
+  const [conditionArray, setConditionArray] = useState([]);
 
   const fetchAPI = () => {
     fetch(url)
@@ -27,22 +29,27 @@ function MyProvider({ children }) {
     init();
   }, []);
 
-  const filterConditions = ({ operation, unit, column }) => {
-    const filter = selectedPlanets;
-    if (operation === 'maior que') {
-      const filtro = filter
-        .filter((planet) => parseInt(planet[column], 10) > parseInt(unit, 10));
-      setSelectedPlanets(filtro);
-    } else if (operation === 'menor que') {
-      const filtro = filter
-        .filter((planet) => parseInt(planet[column], 10) < parseInt(unit, 10));
-      setSelectedPlanets(filtro);
-    } else {
-      const filtro = filter
-        .filter((planet) => parseInt(planet[column], 10) === parseInt(unit, 10));
-      setSelectedPlanets(filtro);
+  const filterConditions = () => {
+    let filter = planets;
+    for (let i = 0; i < conditionArray.length; i += 1) {
+      const { operation, unit, column } = conditionArray[i];
+      if (operation === 'maior que') {
+        filter = filter
+          .filter((planet) => parseInt(planet[column], 10) > parseInt(unit, 10));
+      } else if (operation === 'menor que') {
+        filter = filter
+          .filter((planet) => parseInt(planet[column], 10) < parseInt(unit, 10));
+      } else {
+        filter = filter
+          .filter((planet) => parseInt(planet[column], 10) === parseInt(unit, 10));
+      }
     }
+    setSelectedPlanets(filter);
   };
+
+  useEffect(() => {
+    filterConditions();
+  }, [conditionArray]);
 
   const funcFilter = ({ target: { value } }) => {
     let filtro = planets;
@@ -53,7 +60,13 @@ function MyProvider({ children }) {
 
   return (
     <SearchPlanetsContext.Provider
-      value={ { funcFilter, selectedPlanets, filterConditions } }
+      value={ { funcFilter,
+        selectedPlanets,
+        filterConditions,
+        filterColumns,
+        setFilterColumns,
+        conditionArray,
+        setConditionArray } }
     >
       { children }
     </SearchPlanetsContext.Provider>
