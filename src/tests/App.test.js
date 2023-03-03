@@ -2,6 +2,14 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
 import userEvent from '@testing-library/user-event';
+import mockFetch from './mockFetch';
+
+beforeEach(() => {
+  jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
+    json: () => (mockFetch)
+  }))
+})
+afterEach(() => jest.clearAllMocks());
 
 test('All tests', async () => {
   render(<App />);
@@ -22,3 +30,10 @@ test('All tests', async () => {
   userEvent.click(screen.getByTestId('button-remove-filters'))
   expect(screen.getByTestId('button-remove-filters'))
 });
+
+test('test API', async () => {
+  render(<App />);
+  await waitFor(() => {
+    expect(global.fetch).toHaveBeenCalled(1)
+    screen.findByTestId("name-filter")
+  })});
