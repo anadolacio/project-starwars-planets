@@ -91,7 +91,6 @@ function SelectInputs() {
         filterColumns.map((filter) => (
           <span key={ filter } data-testid="filter">
             <button
-              data-testid="filter"
               type="button"
               key={ filter }
               onClick={ () => {
