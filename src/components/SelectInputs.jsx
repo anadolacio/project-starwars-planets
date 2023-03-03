@@ -89,17 +89,20 @@ function SelectInputs() {
 
       {
         filterColumns.map((filter) => (
-          <button
-            data-testid="filter"
-            type="button"
-            key={ filter }
-            onClick={ () => {
-              setFilterColumns(filterColumns.filter((e) => e !== filter));
-              setConditionArray(conditionArray.filter((e) => e.column !== filter));
-            } }
-          >
-            {filter}
-          </button>
+          <span key={ filter } data-testid="filter">
+            <button
+              data-testid="filter"
+              type="button"
+              key={ filter }
+              onClick={ () => {
+                setFilterColumns(filterColumns.filter((e) => e !== filter));
+                setConditionArray(conditionArray.filter((e) => e.column !== filter));
+              } }
+            >
+              {filter}
+            </button>
+          </span>
+
         ))
       }
     </div>
